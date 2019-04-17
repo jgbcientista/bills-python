@@ -1,0 +1,12 @@
+.navbar-nav {
+    margin-left: 150px;
+}
+
+a.navbar-brand {
+    border: 1px solid rgba(255, 255, 255, 0.603);
+    padding: 10px 10px;
+}
+
+.nav-link {
+    cursor: pointer;
+}

@@ -1,0 +1,24 @@
+<bill-page-header
+  page-title="Categorias"
+  button-text="+ Nova Categoria"
+  button-link="new"
+  button-class="btn-success"
+></bill-page-header>
+
+<table class="table table-striped sm">
+  <thead>
+    <tr>
+      <th scope="col">Descrição</th>
+      <th scope="col">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let categoria of categorias">
+      <td>{{ categoria.nome }}</td>
+      <td>
+        <button [routerLink]="[categoria.id, 'edit']" class="btn btn-outline-info mr-2"><i class="far fa-save"></i></button>
+        <button class="btn btn-outline-info" (click)="deleteResource(categoria)"><i class="far fa-trash-alt"></i></button>
+      </td>
+    </tr>
+  </tbody>
+</table>

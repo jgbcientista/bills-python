@@ -1,0 +1,61 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+    <li class="breadcrumb-item"><a routerLink="/lancamentos">lançamentos</a></li>
+    <li class="breadcrumb-item active">Lançamentos ediçao</li>
+  </ol>
+</nav>
+
+<!-- <br>
+<p>Form Status: {{ resourceForm.value | json}}</p>
+<p>{{ resourceForm.valid }}</p> -->
+
+<form [formGroup]="resourceForm" (submit)="submitForm()">
+  <div class="form-group">
+    <label for="estabelecimento">Estabelecimento</label>
+    <input type="text" class="form-control" formControlName="estabelecimento">
+    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+  </div>
+
+  <!-- Categoria -->
+  <div class="form-group">
+    <label for="categoria">Categoria</label>
+    <div>
+      <p-dropdown [options]="categorias" name="categoria"
+        inputStyleClass="form-control" id="categoria" formControlName="categoria" optionLabel="nome"></p-dropdown>
+    </div>
+  </div>
+
+  <!-- Data -->
+  <div class='row'>
+    <div class='col'>
+      <div class="form-group">
+        <label for="data">Data</label>
+        <div>
+          <p-calendar inputStyleClass="form-control" formControlName="data" dataType="string" dateFormat="dd/mm/yy"
+            [locale]="ptBR"></p-calendar>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <!-- Valor -->
+      <div class="form-group">
+        <label for="data">Valor</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">R$</span>
+          </div>
+          <input type="text" class="form-control" [value]="resourceForm.get('valor').value | currency:'BRL':true"
+            formControlName="valor">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Observação -->
+  <div class="form-group">
+    <label for="observacao">Observação</label>
+    <textarea class="form-control" id="observacao" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary float-right" [disabled]="!resourceForm.valid">Salvar</button>
+</form>
