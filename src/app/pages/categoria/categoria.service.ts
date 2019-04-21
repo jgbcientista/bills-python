@@ -1,41 +1,47 @@
 import { Injectable } from '@angular/core';
 
-import { AngularFireDatabase } from '@angular/fire/database';
-
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, flatMap, tap } from 'rxjs/operators';
 import { Categoria } from './categoria.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { environment } from '../../../environments/environment';
-import { AngularFirestore } from '@angular/fire/firestore';
-
 @Injectable({
     providedIn: 'root'
 })
 export class CategoriaService {
 
-    constructor(private http: HttpClient, private afs: AngularFirestore) { }
+    categorias: Observable<Categoria[]>;
+    erro: any;
+
+    constructor(private http: HttpClient) { }
 
     public getAll() {
-        return this.afs.collection<Categoria>('categorias').snapshotChanges();
+        return this.http.get<Categoria[]>(`${environment.API_PATH}/categorias`);
     }
 
-    public getById(id: string) {
-        return this.afs.doc<Categoria>('categorias/' + id).snapshotChanges();
+    public getById(id: number) {
+        const url = `${environment.API_PATH}/categorias/${id}`;
+        return this.http.get<Categoria>(url);
     }
 
-    create(categoria: Categoria) {
-        this.afs.collection('categorias').add(categoria);
-        console.log(categoria);
+    create(categoria: Categoria): Observable<Categoria> {
+        const url = `${environment.API_PATH}/categorias`;
+
+        return this.http.post<Categoria>(url, categoria);
     }
 
-    update(categoria: Categoria) {
-        this.afs.doc('categorias/' + categoria.id).update(categoria);
+    update(categoria: Categoria): Observable<Categoria> {
+        const url = `${environment.API_PATH}/categorias/${categoria.id}`;
+        return this.http.put<Categoria>(url, categoria);
     }
 
-    delete(id: number) {
-        this.afs.doc('categorias/' + id).delete();
+    delete(id: number): Observable<Categoria> {
+        const url = `${environment.API_PATH}/categorias/${id}`;
+
+        return this.http.delete(url).pipe(
+            catchError(err => this.handleError(err))
+        );
     }
 
     // protected jsonDataToResources(jsonData: any[]): Categoria[] {

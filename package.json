@@ -1,5 +1,5 @@
 {
-  "name": "bills",
+  "name": "bills-python",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -68,7 +68,7 @@
     "type": "git",
     "url": "git+https://github.com/RobsonMattos/bills.git"
   },
-  "author": "",
+  "author": "Robson Mattos",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/RobsonMattos/bills/issues"

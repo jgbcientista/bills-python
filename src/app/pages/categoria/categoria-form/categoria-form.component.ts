@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoriaService } from '../categoria.service';
 import { BaseResourceFormComponent } from 'src/app/shared/components/base-resource-form/BaseResourceFormComponent';
@@ -13,6 +13,7 @@ import toastr from "toastr";
 export class CategoriaFormComponent extends BaseResourceFormComponent<Categoria> implements OnInit {
 
     categoria: Categoria;
+    @ViewChild("nome") nomeField: ElementRef;
 
     constructor(
         private categoriaService: CategoriaService,
@@ -24,6 +25,7 @@ export class CategoriaFormComponent extends BaseResourceFormComponent<Categoria>
         this.setCurrentAction();
         this.buildCategoriForm();
         this.loadCategoria();
+        this.nomeField.nativeElement.focus()
     }
 
     buildCategoriForm() {
@@ -36,36 +38,32 @@ export class CategoriaFormComponent extends BaseResourceFormComponent<Categoria>
     loadCategoria() {
         if (this.currentAction == "edit") {
 
-            // this.route.paramMap.pipe(
-            //     switchMap(params => this.categoriaService.getById(+params.get("id")))
-            // ).subscribe(
-            //     (categoria) => {
-            //         this.categoria = categoria;
-            //         this.resourceForm.patchValue(categoria) // binds loaded resource data to resourceForm
-            //     },
-            //     (error) => alert('Ocorreu um erro no servidor, tente mais tarde.')
-            // )
-
             this.route.paramMap.pipe(
-                switchMap(params => this.categoriaService.getById(params.get("id")))
+                switchMap(params => this.categoriaService.getById(+params.get("id")))
             ).subscribe(
                 (categoria) => {
-                    this.categoria =
-                        {
-                            id: categoria.payload.id,
-                            ...categoria.payload.data()
-                        } as Categoria;
-                    console.log(categoria);
+                    this.categoria = categoria;
+                    this.resourceForm.patchValue(categoria) // binds loaded resource data to resourceForm
                 },
-                (error) => alert('Ocorreu um erro no servidor, tente mais tarde.')
+                (error) => toastr.error('Ocorreu um erro no servidor, tente mais tarde.')
             )
         }
     }
 
     protected createResource() {
         const resource: Categoria = Object.assign(new Categoria(), this.resourceForm.value);
-
-        this.categoriaService.create(resource);
+        this.categoriaService.create(resource)
+            .subscribe(
+                // value => toastr.success("Registro inserido com sucesso"),
+                // error => toastr.error(`Erro ao inserir registro! ${error}`)
+                resource => {
+                    this.actionsForSuccess(resource);
+                    this.nomeField.nativeElement.focus();
+                    console.log(this.nomeField.nativeElement)
+                    this.nomeField.nativeElement.value = '';
+                },
+                error => this.actionsForError(error)
+            );
     }
 
     protected updateResource() {
@@ -73,6 +71,11 @@ export class CategoriaFormComponent extends BaseResourceFormComponent<Categoria>
 
         const resource: Categoria = Object.assign(new Categoria(), this.resourceForm.value);
 
-        this.categoriaService.update(resource);
+        this.categoriaService.update(resource).subscribe(
+            value => {
+                toastr.success("Registro inserido com sucesso")
+            },
+            error => toastr.error(`Erro ao inserir registro! ${error}`)
+        );
     }
 }

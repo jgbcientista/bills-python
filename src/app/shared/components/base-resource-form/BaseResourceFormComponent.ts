@@ -63,12 +63,12 @@ export class BaseResourceFormComponent<T extends BaseResourceModel> implements O
     protected actionsForSuccess(resource: T) {
         toastr.success("Solicitação processada com sucesso!");
 
-        const baseComponentPath: string = this.route.snapshot.parent.url[0].path;
+        // const baseComponentPath: string = this.route.snapshot.parent.url[0].path;
 
-        // redirect/reload component page
-        this.router.navigateByUrl(baseComponentPath, { skipLocationChange: true }).then(
-            () => this.router.navigate([baseComponentPath, resource.id, "edit"])
-        )
+        // // redirect/reload component page
+        // this.router.navigateByUrl(baseComponentPath, { skipLocationChange: true }).then(
+        //     () => this.router.navigate([baseComponentPath, resource.id, "edit"])
+        // )
     }
 
     protected actionsForError(error) {
