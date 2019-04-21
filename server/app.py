@@ -23,12 +23,33 @@ def index():
 
 @app.route("/categorias", methods=["GET", "POST"])
 def categoria():
-    categorias = session.query(Categoria).order_by(Categoria.nome)
-    return jsonify(categorias=[c.serialize for c in categorias]) # jsonify({'store': stores})
+    if request.method == 'POST':
+        session.add(Categoria(request.json['id'], request.json['nome']))
+        session.commit()
+        return json.dumps(request.json)
+    else:
+        categorias = session.query(Categoria).order_by(Categoria.nome)
+        return jsonify(categorias=[c.serialize for c in categorias]) # jsonify({'store': stores})
+
+
+@app.route("/categorias/<int:id>", methods=["PUT"])
+def categoria_put(id):
+    categoria = session.query(Categoria).get(id)
+    categoria.nome = request.json.get('nome', categoria.nome)
+    session.commit()
+    return jsonify(categoria.serialize)
+
+
+@app.route("/categorias/<int:id>", methods=["DELETE"])
+def categoria_del(id):
+    categoria = session.query(Categoria).get(id)
+    session.delete(categoria)
+    session.commit()
+    return jsonify(categoria.serialize)
 
 
 @app.route("/categorias/<id>")
-def categoria_det(id = None):
+def categoria_get(id = None):
     categoria = session.query(Categoria).get(id)
     return jsonify(categoria.serialize)
 

@@ -20,6 +20,10 @@ class Categoria(Base):
     id = Column(Integer, primary_key=True)
     nome = Column(String(50))
 
+    def __init__(self, id, nome):
+        self.id = id
+        self.nome = nome
+
     @property
     def serialize(self):
         return {
