@@ -26,28 +26,32 @@
 </table> -->
 
 <p-table [value]="lancamentos" [paginator]="true" [rows]="10">
-  <ng-template pTemplate="header">
-    <tr>
-      <th scope="col" [pSortableColumn]="'estabelecimento'">Estabelecimento<p-sortIcon [field]="'estabelecimento'"></p-sortIcon></th>
-      <th scope="col" [pSortableColumn]="'data'">Data<p-sortIcon [field]="'data'"></p-sortIcon></th>
-      <th scope="col" [pSortableColumn]="'valor'">Valor<p-sortIcon [field]="'valor'"></p-sortIcon></th>
-      <th scope="col">Ações</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-lancamento>
-    <tr>
-      <td>
-        {{ lancamento.estabelecimento }} <br>
-        <small>{{ lancamento.categoria.nome }}</small>
-      </td>
-      <td>{{ lancamento.data }}</td>
-      <td class="debito"><strong>{{ lancamento.valor | currency:'BRL':true }}</strong></td>
-      <td>
-        <button [routerLink]="[lancamento.id, 'edit']" class="btn btn-outline-info mr-2"><i
-            class="far fa-save"></i></button>
-        <button (click)="deleteResource(lancamento)" class="btn btn-outline-info"><i
-            class="far fa-trash-alt"></i></button>
-      </td>
-    </tr>
-  </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th scope="col" [pSortableColumn]="'estabelecimento'">Estabelecimento<p-sortIcon
+                    [field]="'estabelecimento'"></p-sortIcon>
+            </th>
+            <th scope="col" [pSortableColumn]="'data'">Data<p-sortIcon [field]="'data'"></p-sortIcon>
+            </th>
+            <th scope="col" [pSortableColumn]="'valor'">Valor<p-sortIcon [field]="'valor'"></p-sortIcon>
+            </th>
+            <th scope="col">Ações</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-lancamento>
+        <tr>
+            <td>
+                {{ lancamento.estabelecimento }} <br>
+                <small>{{ lancamento.categoria.nome }}</small>
+            </td>
+            <td>{{ lancamento.data | date: 'dd/MM/yyyy' }}</td>
+            <td class="debito"><strong>{{ lancamento.valor | currency:'BRL':true }}</strong></td>
+            <td>
+                <button [routerLink]="[lancamento.id, 'edit']" class="btn btn-outline-info mr-2"><i
+                        class="far fa-save"></i></button>
+                <button (click)="deleteResource(lancamento)" class="btn btn-outline-info"><i
+                        class="far fa-trash-alt"></i></button>
+            </td>
+        </tr>
+    </ng-template>
 </p-table>
