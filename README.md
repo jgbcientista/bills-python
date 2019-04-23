@@ -25,3 +25,16 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Python - server dependence
+
+pip install flask
+pip install SQLAlchemy
+pip install -U flask-cors
+pip install Flask-SQLAlchemy
+pip install flask-restful (https://flask-restful.readthedocs.io/en/latest/)
+pip install Flask-JWT (https://pythonhosted.org/Flask-JWT/)
+pip install psycopg2
+
+## Banco de dados
+O sistema tem uma pasta "Database" que contem os scripts de criação e carga do banco de dados

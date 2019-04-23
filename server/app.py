@@ -1,14 +1,21 @@
 #!/usr/bin/python
 
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, json
+from flask_restful import Resource, Api, reqparse
+from flask_jwt import JWT, jwt_required, current_identity
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from resources.database_setup import Base, Categoria, Lancamento
 from flask_cors import CORS, cross_origin
 
+from resources.security import authenticate, identity
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'jose'
+api = Api(app)
 CORS(app)
+jwt = JWT(app, authenticate, identity)
 
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/bills')
 Base.metadata.bind = engine
@@ -16,37 +23,40 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
 @app.route("/")
 def index():
     return "Hello!"
 
 
-@app.route("/categorias", methods=["GET", "POST"])
-def categoria():
-    if request.method == 'POST':
+class CategoriaList(Resource):
+    def get(self):
+      categorias = session.query(Categoria).order_by(Categoria.nome)
+      return jsonify(categorias=[c.serialize for c in categorias])  # jsonify({'store': stores})
+
+
+class CategoriaResource(Resource):
+    def get(self, id):
+      categoria = session.query(Categoria).get(id)
+      return jsonify(categoria.serialize)
+
+    def post(self, categoria):
         session.add(Categoria(request.json['id'], request.json['nome']))
         session.commit()
         return json.dumps(request.json), 201
-    else:
-        categorias = session.query(Categoria).order_by(Categoria.nome)
-        return jsonify(categorias=[c.serialize for c in categorias]) # jsonify({'store': stores})
 
+    def delete(self, id):
+        categoria = session.query(Categoria).get(id)
+        session.delete(categoria)
+        session.commit()
+        return jsonify(categoria.serialize)
 
-@app.route("/categorias/<int:id>", methods=["PUT"])
-def categoria_put(id):
-    categoria = session.query(Categoria).get(id)
-    categoria.nome = request.json.get('nome', categoria.nome)
-    session.commit()
-    return jsonify(categoria.serialize)
-#     return {'item': None}, 404
-
-
-@app.route("/categorias/<int:id>", methods=["DELETE"])
-def categoria_del(id):
-    categoria = session.query(Categoria).get(id)
-    session.delete(categoria)
-    session.commit()
-    return jsonify(categoria.serialize)
+    def put(self, id):
+        categoria = session.query(Categoria).get(id)
+        categoria.nome = request.json.get('nome', categoria.nome)
+        session.commit()
+        return jsonify(categoria.serialize)
+    #     return {'item': None}, 404
 
 
 @app.route("/categorias/<id>")
@@ -55,43 +65,41 @@ def categoria_get(id = None):
     return jsonify(categoria.serialize)
 
 
-# Inicio Lançamento
+class LancamentoList(Resource):
+    def get(self):
+      lancamentos = session.query(Lancamento).order_by(Lancamento.estabelecimento)
+      return jsonify(lancamentos=[l.serialize for l in lancamentos])  # jsonify({'store': stores})
 
-@app.route("/lancamentos", methods=["GET", "POST"])
-def lancamento():
-    if request.method == 'POST':
+class LancamentoResource(Resource):
+    def get(self, id):
+        lancamento = session.query(Lancamento).get(id)
+        return jsonify(lancamento.serialize)
+
+    def post(self, lancamento):
         session.add(Lancamento(request.json['id'],
                                request.json['estabelecimento'],
                                request.json['data'],
                                request.json['valor']))
         session.commit()
         return json.dumps(request.json)
-    else:
-        lancamentos = session.query(Lancamento).order_by(Lancamento.estabelecimento)
-        return jsonify(lancamentos=[l.serialize for l in lancamentos]) # jsonify({'store': stores})
+
+    def put(id):
+        lancamento = session.query(Lancamento).get(id)
+        lancamento.nome = request.json.get('nome', lancamento.nome)
+        session.commit()
+        return jsonify(lancamento.serialize)
+
+    def delete(id):
+        lancamento = session.query(Lancamento).get(id)
+        session.delete(lancamento)
+        session.commit()
+        return jsonify(lancamento.serialize)
 
 
-@app.route("/lancamentos/<int:id>", methods=["PUT"])
-def lancamento_put(id):
-    lancamento = session.query(Lancamento).get(id)
-    lancamento.nome = request.json.get('nome', lancamento.nome)
-    session.commit()
-    return jsonify(lancamento.serialize)
-
-
-@app.route("/lancamentos/<int:id>", methods=["DELETE"])
-def lancamento_del(id):
-    lancamento = session.query(Lancamento).get(id)
-    session.delete(lancamento)
-    session.commit()
-    return jsonify(lancamento.serialize)
-
-
-@app.route("/lancamentos/<id>")
-def lancamento_get(id = None):
-    lancamento = session.query(Lancamento).get(id)
-    return jsonify(lancamento.serialize)
-
+api.add_resource(CategoriaList, '/categorias')
+api.add_resource(CategoriaResource, '/categorias/<int:id>')
+api.add_resource(LancamentoList, '/lancamentos')
+api.add_resource(LancamentoResource, '/lancamentos/<int:id>')
 
 
 if __name__ == '__main__':
