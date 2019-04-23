@@ -26,7 +26,7 @@ def categoria():
     if request.method == 'POST':
         session.add(Categoria(request.json['id'], request.json['nome']))
         session.commit()
-        return json.dumps(request.json)
+        return json.dumps(request.json), 201
     else:
         categorias = session.query(Categoria).order_by(Categoria.nome)
         return jsonify(categorias=[c.serialize for c in categorias]) # jsonify({'store': stores})
@@ -38,6 +38,7 @@ def categoria_put(id):
     categoria.nome = request.json.get('nome', categoria.nome)
     session.commit()
     return jsonify(categoria.serialize)
+#     return {'item': None}, 404
 
 
 @app.route("/categorias/<int:id>", methods=["DELETE"])
