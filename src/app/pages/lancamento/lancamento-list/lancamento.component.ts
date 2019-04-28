@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Lancamento } from '../lancamento.model';
 import { LancamentoService } from '../lancamento.service';
 import toastr from "toastr";
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'bill-lancamento',
@@ -16,12 +17,16 @@ export class LancamentoComponent implements OnInit {
     constructor(private lancamentoService: LancamentoService) { }
 
     ngOnInit() {
+        // this.lancamentoService.getAll().subscribe(
+        //     lancamentos => {
+        //         Object.values(lancamentos).map(v => Object.assign(this.lancamentos, v));
+        //     },
+        //     error => toastr.error(`Erro ao carregar a lista! ${error}`)
+        // );
         this.lancamentoService.getAll().subscribe(
-            lancamentos => {
-                Object.values(lancamentos).map(v => Object.assign(this.lancamentos, v));
-            },
-            error => toastr.error(`Erro ao carregar a lista! ${error}`)
-        );
-    }
+            resources => this.lancamentos = resources.sort((a, b) => b.id - a.id),
+            error => alert('Erro ao carregar a lista')
+        )
 
+    }
 }

@@ -6,14 +6,15 @@ import { LancamentoService } from '../lancamento.service';
 import { BaseResourceFormComponent } from 'src/app/shared/components/base-resource-form/BaseResourceFormComponent';
 import { CategoriaService } from '../../categoria/categoria.service';
 import { Categoria } from '../../categoria/categoria.model';
+import toastr from "toastr";
 
 @Component({
     selector: 'bill-lancamento-form',
     templateUrl: './lancamento-form.component.html'
 })
 export class LancamentoFormComponent extends BaseResourceFormComponent<Lancamento> implements OnInit, AfterContentChecked {
-    lancamento: Lancamento;
-    categorias: Categoria[] = [];
+    lancamento: Lancamento = new Lancamento();
+    categorias: Array<Categoria> = [];
     currentAction: string;
     // lancamentoForm: FormGroup;
     pageTitle: string;
@@ -34,8 +35,8 @@ export class LancamentoFormComponent extends BaseResourceFormComponent<Lancament
     };
 
     constructor(
-        private lancamentoService: LancamentoService,
         private categoriaService: CategoriaService,
+        private lancamentoService: LancamentoService,
         protected injector: Injector) {
         super(injector);
     }
@@ -43,12 +44,22 @@ export class LancamentoFormComponent extends BaseResourceFormComponent<Lancament
     ngOnInit() {
         this.setCurrentAction();
         this.buildLancamentoForm();
-        this.loadCategoria();
         this.loadLancamento();
+        this.loadCategoria();
     }
 
     ngAfterContentChecked() {
         this.setPageTitle();
+    }
+
+    protected buildLancamentoForm() {
+        this.resourceForm = this.fb.group({
+            id: [''],
+            categoria: ['', [Validators.required]],
+            estabelecimento: ['', [Validators.required, Validators.minLength(2)]],
+            data: ['', [Validators.required]],
+            valor: ['', [Validators.required]]
+        });
     }
 
     submitForm() {
@@ -59,27 +70,11 @@ export class LancamentoFormComponent extends BaseResourceFormComponent<Lancament
             this.updateResource();
     }
 
-    protected buildLancamentoForm() {
-        this.resourceForm = this.fb.group({
-            id: [null],
-            categoria: [null, [Validators.required]],
-            estabelecimento: [null, [Validators.required, Validators.minLength(2)]],
-            data: [null, [Validators.required]],
-            valor: [null, [Validators.required]]
-        });
-    }
     protected setCurrentAction() {
         if (this.route.snapshot.url[0].path == "new")
             this.currentAction = "new";
         else
             this.currentAction = "edit";
-    }
-    protected setPageTitle() {
-        // if (this.currentAction == 'new')
-        //   this.pageTitle = this.creationPageTitle();
-        // else {
-        //   this.pageTitle = this.editionPageTitle();
-        // }
     }
 
     protected createResource() {
@@ -96,28 +91,62 @@ export class LancamentoFormComponent extends BaseResourceFormComponent<Lancament
     protected updateResource() {
         // const resource: Categoria = this.jsonDataToResourceFn(this.categoriaForm.value);
 
-        const resource: Lancamento = Object.assign(new Lancamento(), this.resourceForm.value);
+        const lancamento: Lancamento = Object.assign(new Lancamento(), this.resourceForm.value);
 
-        this.lancamentoService.update(resource)
+        this.categorias.map(categoria => {
+            console.log(categoria)
+
+            if (categoria.id == lancamento.categoria) {
+                lancamento.categoria = categoria;
+            }
+        })
+
+        console.log(lancamento.categoria)
+
+        this.lancamentoService.update(lancamento)
             .subscribe(
-                resource => this.actionsForSuccess(resource),
+                lancamento => this.actionsForSuccess(lancamento),
                 error => this.actionsForError(error)
             )
     }
 
-    protected loadLancamento() {
-        if (this.currentAction == "edit") {
-            this.route.paramMap.pipe(switchMap(params => this.lancamentoService.getById(+params.get("id"))))
-                .subscribe((lancamento) => {
-                    this.lancamento = lancamento;
-                    // console.log(lancamento.categoria.id);
-                    // this.resourceForm.get('categoria').setValue(lancamento.categoria.id);
-                    this.resourceForm.patchValue(lancamento); // binds loaded resource data to resourceForm
-                }, (error) => alert('Ocorreu um erro no servidor, tente mais tarde.'));
+    getCategoria(element) {
+        const lancamento: Lancamento = Object.assign(new Lancamento(), this.resourceForm.value);
+        console.log(lancamento)
+
+        if (element == lancamento.categoria) {
+            return element;
         }
     }
 
-    loadCategoria(): any {
-        // this.categoriaService.getAll().subscribe(categorias => this.categorias = categorias)
+    protected loadLancamento() {
+        if (this.currentAction == "edit") {
+
+            this.route.paramMap.pipe(
+                switchMap(params => this.lancamentoService.getById(+params.get("id")))
+            ).subscribe(
+                (lancamento) => {
+                    this.lancamento = lancamento;
+                    this.resourceForm.patchValue(lancamento) // binds loaded resource data to resourceForm
+                },
+                (error) => toastr.error('Ocorreu um erro no servidor, tente mais tarde.')
+            )
+        }
+    }
+
+    loadCategoria() {
+        // this.categoriaService.getAll().subscribe(
+        //     categorias => {
+        //         Object.values(categorias).map(v => Object.assign(this.categorias, v));
+        //         // this.categorias = categorias;
+        //         console.log(this.categorias);
+        //     },
+        //     error => toastr.error(`Erro ao carregar a lista! ${error}`)
+        // );
+
+        this.categoriaService.getAll().subscribe(
+            resources => this.categorias = resources.sort((a, b) => b.id - a.id),
+            error => alert('Erro ao carregar a lista')
+        )
     }
 }

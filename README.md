@@ -2,6 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
 
+
+## Dependences
+npm install ng2-currency-mask --save
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -33,7 +37,8 @@ pip install SQLAlchemy
 pip install -U flask-cors
 pip install Flask-SQLAlchemy
 pip install flask-restful (https://flask-restful.readthedocs.io/en/latest/)
-pip install Flask-JWT (https://pythonhosted.org/Flask-JWT/)
+pip install Flask-JWT (https://pythonhosted.org/Flask-JWT/) ou pode ser usado também o 
+flask hhtpauth
 pip install psycopg2
 
 ## Banco de dados

@@ -11,18 +11,25 @@ import { environment } from '../../../environments/environment';
 })
 export class CategoriaService {
 
-    categorias: Observable<Categoria[]>;
-    erro: any;
-
     constructor(private http: HttpClient) { }
 
     public getAll() {
-        return this.http.get<Categoria[]>(`${environment.API_PATH}/categorias`);
+        // return this.http.get<Categoria[]>(`${environment.API_PATH}/categorias`);
+
+        return this.http.get(`${environment.API_PATH}/categorias`).pipe(
+            map(this.jsonDataToResources),
+            catchError(this.handleError)
+        );
     }
 
     public getById(id: number) {
         const url = `${environment.API_PATH}/categorias/${id}`;
-        return this.http.get<Categoria>(url);
+        // return this.http.get<Categoria>(url);
+
+        return this.http.get(url).pipe(
+            map(this.jsonDataToResource.bind(this)),
+            catchError(this.handleError)
+        );
     }
 
     create(categoria: Categoria): Observable<Categoria> {
@@ -76,5 +83,19 @@ export class CategoriaService {
         return throwError(
             'Something bad happened; please try again later.');
     };
+
+    protected jsonDataToResources(jsonData: any[]): Categoria[] {
+        const resources: Categoria[] = [];
+
+        jsonData.forEach(
+            element => resources.push(Categoria.fromJson(element))
+        );
+        console.log(resources);
+        return resources;
+    }
+
+    protected jsonDataToResource(jsonData: any): Categoria {
+        return Categoria.fromJson(jsonData);
+    }
 
 }

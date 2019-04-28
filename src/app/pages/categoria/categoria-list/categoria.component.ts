@@ -25,12 +25,17 @@ export class CategoriaComponent implements OnInit {
     }
 
     getAll() {
+        // this.categoriaService.getAll().subscribe(
+        //     categorias => {
+        //         Object.values(categorias).map(v => Object.assign(this.categorias, v));
+        //     },
+        //     error => toastr.error(`Erro ao carregar a lista! ${error}`)
+        // );
+
         this.categoriaService.getAll().subscribe(
-            categorias => {
-                Object.values(categorias).map(v => Object.assign(this.categorias, v));
-            },
-            error => toastr.error(`Erro ao carregar a lista! ${error}`)
-        );
+            resources => this.categorias = resources.sort((a, b) => b.id - a.id),
+            error => alert('Erro ao carregar a lista')
+        )
     }
 
     deleteResource(categoria) {

@@ -1,31 +1,7 @@
 <bill-page-header page-title="Lançamentos" button-text="+ Novo Lançamento" button-link="new" button-class="btn-success">
 </bill-page-header>
-<!-- <table class="table table-striped sm">
-  <thead>
-    <tr>
-      <th scope="col">Estabelecimento</th>
-      <th scope="col">Data</th>
-      <th scope="col">Valor</th>
-      <th scope="col">Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let lancamento of lancamentos">
-      <td>
-        {{ lancamento.estabelecimento }} <br>
-        <small>{{ lancamento.categoria.nome }}</small>
-      </td>
-      <td>{{ lancamento.data }}</td>
-      <td class="debito"><strong>{{ lancamento.valor | currency:'BRL':true }}</strong></td>
-      <td>
-        <button [routerLink]="[lancamento.id, 'edit']" class="btn btn-outline-info mr-2"><i class="far fa-save"></i></button>
-        <button (click)="deleteResource(lancamento)" class="btn btn-outline-info"><i class="far fa-trash-alt"></i></button>
-      </td>
-    </tr>
-  </tbody>
-</table> -->
 
-<p-table [value]="lancamentos" [paginator]="true" [rows]="10">
+<p-table [value]="lancamentos" [paginator]="true" [rows]="10" [responsive]="true" autoLayout="true">
     <ng-template pTemplate="header">
         <tr>
             <th scope="col" [pSortableColumn]="'estabelecimento'">Estabelecimento<p-sortIcon
@@ -44,7 +20,7 @@
                 {{ lancamento.estabelecimento }} <br>
                 <small>{{ lancamento.categoria.nome }}</small>
             </td>
-            <td>{{ lancamento.data | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ lancamento.data }}</td>
             <td class="debito"><strong>{{ lancamento.valor | currency:'BRL':true }}</strong></td>
             <td>
                 <button [routerLink]="[lancamento.id, 'edit']" class="btn btn-outline-info mr-2"><i

@@ -16,16 +16,14 @@ import { AppRoutingModule } from './app-routing.modules';
 
 import { AppComponent } from './app.component';
 import { BillNavbarComponent } from './bill-navbar/bill-navbar.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './pages/home/home.component';
 import { environment } from 'src/environments/environment';
 
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ContasComponent } from './contas/contas.component';
-import { HeaderComponent } from './header/header.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './pages/login/login.component';
 
 registerLocaleData(ptBr)
 
@@ -34,8 +32,6 @@ registerLocaleData(ptBr)
         AppComponent,
         BillNavbarComponent,
         HomeComponent,
-        ContasComponent,
-        HeaderComponent,
         LoginComponent
     ],
     imports: [

@@ -1,0 +1,26 @@
+<p-table [value]="faturas" [paginator]="true" [rows]="10" [responsive]="true" autoLayout="true">
+    <ng-template pTemplate="header">
+        <tr>
+            <th scope="col" [pSortableColumn]="'data'">Data Vencimento<p-sortIcon [field]="'data'"></p-sortIcon>
+            </th>
+            <th scope="col" [pSortableColumn]="'data'">Data Pagamento<p-sortIcon [field]="'data'"></p-sortIcon>
+            </th>
+            <th scope="col" [pSortableColumn]="'valor'">Valor<p-sortIcon [field]="'valor'"></p-sortIcon>
+            </th>
+            <th scope="col">Ações</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-fatura>
+        <tr>
+            <td>{{ fatura.data_vencimento }}</td>
+            <td>{{ fatura.data_pagamento }}</td>
+            <td class="debito"><strong>{{ fatura.valor | currency:'BRL':true }}</strong></td>
+            <td>
+                <button [routerLink]="[fatura.id, 'edit']" class="btn btn-outline-info mr-2"><i
+                        class="far fa-save"></i></button>
+                <button (click)="deleteResource(fatura)" class="btn btn-outline-info"><i
+                        class="far fa-trash-alt"></i></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

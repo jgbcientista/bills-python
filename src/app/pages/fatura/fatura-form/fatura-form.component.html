@@ -1,8 +1,8 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-        <li class="breadcrumb-item"><a routerLink="/lancamentos">lançamentos</a></li>
-        <li class="breadcrumb-item active">Lançamentos ediçao</li>
+        <li class="breadcrumb-item"><a routerLink="/faturas">faturas</a></li>
+        <li class="breadcrumb-item active">Faturas ediçao</li>
     </ol>
 </nav>
 
@@ -11,36 +11,25 @@
 <p>{{ resourceForm.valid }}</p>
 
 <form [formGroup]="resourceForm" (submit)="submitForm()">
-    <div class="form-group">
-        <label for="estabelecimento">Estabelecimento</label>
-        <input id="estabelecimento" name="estabelecimento" type="text" class="form-control"
-            formControlName="estabelecimento" required #estabelecimento>
-        <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
 
-    </div>
-
-    <!-- Categoria -->
-    <div class="form-group">
-        <label for="categoria">Categoria</label>
-        <div>
-            <!-- <p-dropdown [options]="categorias" name="categoria" inputStyleClass="form-control" id="categoria"
-                formControlName="categoria" optionLabel="categoria.nome"></p-dropdown> -->
-            <select formControlName="categoria" class="form-control">
-                <option *ngFor="let categoria of categorias" [selected]="lancamento.categoria" [value]="categoria.id">
-                    {{categoria.nome}}
-                </option>
-            </select>
-
-        </div>
-    </div>
-
-    <!-- Data -->
     <div class='row'>
+        <!-- Data Vencimento -->
         <div class='col'>
             <div class="form-group">
                 <label for="data">Data</label>
                 <div>
-                    <p-calendar inputStyleClass="form-control" formControlName="data" dataType="string"
+                    <p-calendar inputStyleClass="form-control" formControlName="data_vencimento" dataType="string"
+                        dateFormat="dd/mm/yy" [locale]="ptBR"></p-calendar>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Pagamento -->
+        <div class="col">
+            <div class="form-group">
+                <label for="data">Data</label>
+                <div>
+                    <p-calendar inputStyleClass="form-control" formControlName="data_pagamento" dataType="string"
                         dateFormat="dd/mm/yy" [locale]="ptBR"></p-calendar>
                 </div>
             </div>

@@ -23,12 +23,12 @@ export class CategoriaFormComponent extends BaseResourceFormComponent<Categoria>
 
     ngOnInit() {
         this.setCurrentAction();
-        this.buildCategoriForm();
+        this.buildCategoriaForm();
         this.loadCategoria();
         this.nomeField.nativeElement.focus()
     }
 
-    buildCategoriForm() {
+    buildCategoriaForm() {
         this.resourceForm = this.fb.group({
             id: [null],
             nome: ['', Validators.required]

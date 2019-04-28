@@ -20,6 +20,7 @@ export class BaseResourceFormComponent<T extends BaseResourceModel> implements O
     submittingForm: boolean = false;
 
     currentAction: string;
+    pageTitle: string;
 
     constructor(
         protected injector: Injector
@@ -80,5 +81,13 @@ export class BaseResourceFormComponent<T extends BaseResourceModel> implements O
             this.serverErrorMessages = JSON.parse(error._body).errors;
         else
             this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor, tente mais tarde."]
+    }
+
+    protected setPageTitle() {
+        // if (this.currentAction == 'new')
+        //   this.pageTitle = this.creationPageTitle();
+        // else {
+        //   this.pageTitle = this.editionPageTitle();
+        // }
     }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 
-import { Lancamento } from './lancamento.model';
+import { Fatura } from './fatura.model';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../../environments/environment';
@@ -10,15 +10,15 @@ import { map, catchError } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root'
 })
-export class LancamentoService {
+export class FaturaService {
 
     constructor(
         private http: HttpClient) { }
 
     public getAll() {
-        // return this.http.get<Lancamento[]>(`${environment.API_PATH}/lancamentos`);
+        // return this.http.get<fatura[]>(`${environment.API_PATH}/faturas`);
 
-        return this.http.get(`${environment.API_PATH}/lancamentos`).pipe(
+        return this.http.get(`${environment.API_PATH}/faturas`).pipe(
             map(this.jsonDataToResources),
             catchError(this.handleError)
         );
@@ -26,8 +26,8 @@ export class LancamentoService {
     }
 
     public getById(id: number) {
-        const url = `${environment.API_PATH}/lancamentos/${id}`;
-        // return this.http.get<Lancamento>(url);
+        const url = `${environment.API_PATH}/faturas/${id}`;
+        // return this.http.get<fatura>(url);
 
         return this.http.get(url).pipe(
             map(this.jsonDataToResource.bind(this)),
@@ -35,33 +35,35 @@ export class LancamentoService {
         );
     }
 
-    update(lancamento: Lancamento): Observable<Lancamento> {
-        const url = `${environment.API_PATH}/lancamentos/${lancamento.id}`;
+    update(fatura: Fatura): Observable<Fatura> {
+        const url = `${environment.API_PATH}/faturas/${fatura.id}`;
 
         // return this.http.put(url, categoria).pipe(
         //   map(() => categoria),
         //   catchError(this.handleError)
         // );
-        console.log(lancamento);
+        console.log(fatura);
 
-        return this.http.put<Lancamento>(url, lancamento);
+        return this.http.put<Fatura>(url, fatura);
     }
 
-    public create(lancamento: Lancamento) {
+    public create(fatura: Fatura) {
 
     }
 
-    protected jsonDataToResources(jsonData: any[]): Lancamento[] {
-        const resources: Lancamento[] = [];
+    protected jsonDataToResources(jsonData: any[]): Fatura[] {
+        const resources: Fatura[] = [];
 
         jsonData.forEach(
-            element => resources.push(Lancamento.fromJson(element))
+            element => resources.push(Fatura.fromJson(element))
         );
+
+        console.log(resources);
         return resources;
     }
 
-    protected jsonDataToResource(jsonData: any): Lancamento {
-        return Lancamento.fromJson(jsonData);
+    protected jsonDataToResource(jsonData: any): Fatura {
+        return Fatura.fromJson(jsonData);
     }
 
     protected handleError(error: any): Observable<any> {
