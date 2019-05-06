@@ -5,3 +5,8 @@
 .navbar-collapse {
     margin-left: 80px;
 }
+
+.user {
+    border-left: 1px solid;
+    cursor: pointer;
+}

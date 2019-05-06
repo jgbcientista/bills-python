@@ -24,8 +24,6 @@ import ptBr from '@angular/common/locales/pt';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ContasComponent } from './contas/contas.component';
-import { HeaderComponent } from './header/header.component';
-import { LoginComponent } from './login/login.component';
 
 registerLocaleData(ptBr)
 
@@ -34,9 +32,7 @@ registerLocaleData(ptBr)
         AppComponent,
         BillNavbarComponent,
         HomeComponent,
-        ContasComponent,
-        HeaderComponent,
-        LoginComponent
+        ContasComponent
     ],
     imports: [
         BrowserModule,
